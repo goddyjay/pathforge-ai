@@ -1,0 +1,325 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    @apply antialiased text-slate-200;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: #07080d;
+    background-image:
+      radial-gradient(1100px 600px at 12% -20%, rgba(99, 102, 241, 0.18), transparent 60%),
+      radial-gradient(900px 500px at 110% 20%, rgba(168, 85, 247, 0.12), transparent 60%),
+      linear-gradient(180deg, #07080d 0%, #0a0b12 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  /* Subtle noise overlay for texture — classy, not grungy. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+  }
+
+  ::selection {
+    background: rgba(129, 140, 248, 0.35);
+    color: #fff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+    background-clip: content-box;
+  }
+
+  /* Numbers should be tabular everywhere by default on money/metric classes. */
+  :focus-visible {
+    outline: none;
+  }
+}
+
+@layer components {
+  /* ------------------------------------------------------------------
+     Surfaces — single source of truth for cards.
+     Philosophy: hairline border + faint inset top-highlight to sell depth,
+     no heavy gradients. Premium products win by restraint.
+  ------------------------------------------------------------------ */
+  .card {
+    position: relative;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 1px 0 rgba(255, 255, 255, 0.02),
+      0 24px 48px -24px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .card-hover {
+    transition: transform 240ms cubic-bezier(0.2, 0.6, 0.2, 1),
+                border-color 240ms ease,
+                background-color 240ms ease,
+                box-shadow 240ms ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 1px 0 rgba(255, 255, 255, 0.02),
+      0 30px 60px -24px rgba(0, 0, 0, 0.75);
+  }
+
+  .card-elevated {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01));
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
+
+  /* ------------------------------------------------------------------
+     Form primitives
+  ------------------------------------------------------------------ */
+  .field-label {
+    @apply text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 mb-1.5 block;
+  }
+
+  .field-input {
+    width: 100%;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f1f5f9;
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.3;
+    transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  }
+  .field-input::placeholder { color: #64748b; }
+  .field-input:hover { border-color: rgba(255, 255, 255, 0.13); }
+  .field-input:focus {
+    outline: none;
+    border-color: rgba(129, 140, 248, 0.55);
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 0 0 3px rgba(129, 140, 248, 0.18);
+  }
+  .field-input-icon { padding-left: 38px; }
+
+  .field-error {
+    @apply text-[11px] text-rose-400 mt-1;
+  }
+
+  /* ------------------------------------------------------------------
+     Buttons
+  ------------------------------------------------------------------ */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    letter-spacing: -0.005em;
+    padding: 11px 18px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+      0 10px 24px -8px rgba(79, 70, 229, 0.5);
+    transition: transform 160ms ease, box-shadow 200ms ease, filter 160ms ease;
+  }
+  .btn-primary:hover:not(:disabled) {
+    filter: brightness(1.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+      0 14px 30px -8px rgba(99, 102, 241, 0.6);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+    filter: brightness(0.98);
+  }
+  .btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    font-size: 13px;
+    color: #e2e8f0;
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+  .btn-secondary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    font-size: 13px;
+    color: #cbd5e1;
+    padding: 8px 12px;
+    border-radius: 9px;
+    transition: background-color 160ms ease, color 160ms ease;
+  }
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+  }
+
+  /* ------------------------------------------------------------------
+     Chips
+  ------------------------------------------------------------------ */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #c7d2fe;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(129, 140, 248, 0.3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .chip-suggestion {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+  }
+  .chip-suggestion:hover {
+    border-color: rgba(129, 140, 248, 0.45);
+    color: #e0e7ff;
+    background: rgba(99, 102, 241, 0.08);
+  }
+
+  /* ------------------------------------------------------------------
+     Badges
+  ------------------------------------------------------------------ */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    border: 1px solid transparent;
+  }
+
+  /* ------------------------------------------------------------------
+     Typography helpers
+  ------------------------------------------------------------------ */
+  .section-title {
+    @apply text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500;
+  }
+
+  .eyebrow {
+    @apply text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400;
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 50%, #d8b4fe 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .display {
+    font-family: "Inter Tight", Inter, ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+  }
+
+  /* Divider line with fade-out edges — used between form sections. */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  }
+}
+
+@layer utilities {
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(180deg, black 40%, transparent 100%);
+    mask-image: linear-gradient(180deg, black 40%, transparent 100%);
+  }
+
+  .mask-radial {
+    -webkit-mask-image: radial-gradient(closest-side, black, transparent);
+    mask-image: radial-gradient(closest-side, black, transparent);
+  }
+
+  /* Soft inner highlight for "pop" on dark surfaces. */
+  .ring-highlight { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+}
