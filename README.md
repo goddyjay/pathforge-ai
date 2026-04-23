@@ -128,7 +128,7 @@ pathforge-ai/
 
 - **Backend:** Node 22 · Express 5 · express-validator · Anthropic SDK
 - **Frontend:** React 18 · Vite · Tailwind · Framer Motion · React Router 7 · React Hook Form · Zod
-- **AI:** Anthropic Claude (Sonnet 4.6)
+- **Runtime AI model:** Claude Sonnet 4.6 (used by the app at inference time)
 
 ---
 
@@ -146,5 +146,6 @@ See `.env.example`.
 
 ## Credits
 
-Built with [Claude](https://www.anthropic.com/claude) (Sonnet 4.6) and a lot
-of Framer Motion.
+Designed and built pair-programming with **Claude Opus 4.7 (1M context)**.
+The deployed app itself makes inference calls to **Claude Sonnet 4.6** for
+the career, education, and life-decision modules.
